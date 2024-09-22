@@ -42,22 +42,19 @@ function App() {
     <TodoProvider
       value={{ todos, addTodo, updatedTodo, deleteTodo, toggleComplete }}
     >
-      <div className="bg-[#172842] min-h-screen py-8">
-        <div className="w-full max-w-2xl mx-auto shadow-md rounded-lg px-4 py-3 text-white">
-          <h1 className="text-2xl font-bold text-center mb-8 mt-2">
+      <div className="bg-[#172842] min-h-screen flex flex-col py-8">
+        <div className="w-full max-w-4xl mx-auto flex-1 flex flex-col shadow-lg rounded-lg px-6 py-4 text-white">
+          <h1 className="text-3xl font-bold text-center mb-8 mt-2">
             Manage Your Todos
           </h1>
-          <div className="mb-4">
+          <div className="mb-6">
             {/* Todo form goes here */}
             <TodoForm />
           </div>
-          <div className="flex flex-wrap gap-y-3">
-            {/*Loop and Add TodoItem here */}
+          <div className="flex flex-col gap-y-4 overflow-y-auto">
+            {/* Loop and Add TodoItem here */}
             {todos.map((todo) => (
-              <div key={todo.id}>
-                {' '}
-                <TodoItem todo={todo} />{' '}
-              </div>
+              <TodoItem key={todo.id} todo={todo} todos={todos} />
             ))}
           </div>
         </div>
