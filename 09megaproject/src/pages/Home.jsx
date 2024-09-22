@@ -6,7 +6,9 @@ function Home() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
+    console.log('test');
     appwriteService.getPosts().then((posts) => {
+      console.log(posts);
       if (posts) {
         setPosts(posts.documents);
       }

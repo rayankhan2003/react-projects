@@ -5,67 +5,40 @@ import appwriteService from '../../appwrite/config';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
-function PostForm({ post }) {
+function PostForm() {
   const { register, handleSubmit, watch, setValue, control, getValues } =
     useForm({
       defaultValues: {
-        title: post?.title || '',
-        slug: post?.$id || '',
-        content: post?.content || '',
-        status: post?.status || 'active',
+        title: '',
+        slug: '',
+        content: '',
+        featuredImage: [],
+        status: 'active',
       },
     });
 
   const navigate = useNavigate();
   const userData = useSelector((state) => state.auth.userData);
-  // console.log('userData: (in PostForm component) ', userData)
 
   const submit = async (data) => {
-    if (post) {
-      // console.log('Data: (in PostForm component) ', data)
-      console.log('Post: (in PostForm component) ', post);
-      try {
-        const file = data.image[0]
-          ? await appwriteService.uploadFile(data.image[0])
-          : null;
-
-        if (file) {
-          appwriteService.deleteFile(post.featuredImage);
-        }
-
-        const dbPost = await appwriteService.updatePost(post.$id, {
+    console.log(data);
+    const file = await appwriteService.uploadFile(data.featuredImage[0]);
+    try {
+      if (file) {
+        const fileId = file.$id;
+        data.featuredImage = fileId;
+        console.log('User data ID: ', userData.$id);
+        const dbPost = await appwriteService.createPost({
           ...data,
-          featuredImage: file ? file.$id : undefined,
+          userId: userData.$id,
         });
-        // console.log('dbPost: (in PostForm component) ', dbPost)
         if (dbPost) {
           navigate(`/post/${dbPost.$id}`);
         }
-      } catch (error) {
-        console.log(error);
       }
-    } else {
-      const file = await appwriteService.uploadFile(data.image[0]);
-      // console.log('file: (in PostForm component) ', file)
-
-      try {
-        if (file) {
-          const fileId = file.$id;
-          data.featuredImage = fileId;
-          console.log('User data ID: ', userData.$id);
-          const dbPost = await appwriteService.createPost({
-            ...data,
-            userId: userData.$id,
-          });
-          if (dbPost) {
-            navigate(`/post/${dbPost.$id}`);
-          }
-        }
-      } catch (error) {
-        console.log(error);
-        await appwriteService.deleteFile(file.$id);
-        // throw error
-      }
+    } catch (error) {
+      console.log(error);
+      await appwriteService.deleteFile(file.$id);
     }
   };
 
@@ -82,12 +55,10 @@ function PostForm({ post }) {
 
   useEffect(() => {
     const subscription = watch((value, { name }) => {
-      // console.log('new value : ', value)
       if (name === 'title') {
         setValue('slug', slugTransform(value.title, { shouldValidate: true }));
       }
     });
-    // if(post) console.log('Post updated ! ')
 
     return () => {
       subscription.unsubscribe();
@@ -128,29 +99,16 @@ function PostForm({ post }) {
           type="file"
           className="mb-4 w-full mt-2"
           accept="image/png, image/jpg, image/jpeg, image/gif"
-          {...register('image', { required: !post })}
+          {...register('featuredImage', { required: true })}
         />
-        {post && (
-          <div className="w-full mb-4">
-            <img
-              src={appwriteService.getFilePreview(post.featuredImage)}
-              alt={post.title}
-              className="rounded-lg"
-            />
-          </div>
-        )}
         <Select
           options={['active', 'inactive']}
           label="Status"
           className="mb-4"
           {...register('status', { required: true })}
         />
-        <Button
-          type="submit"
-          bgColor={post ? 'bg-green-500' : undefined}
-          className="w-full"
-        >
-          {post ? 'Update' : 'Submit'}
+        <Button type="submit" className="w-full">
+          Submit
         </Button>
       </div>
     </form>
