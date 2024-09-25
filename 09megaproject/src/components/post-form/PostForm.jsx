@@ -22,11 +22,11 @@ function PostForm() {
 
   const submit = async (data) => {
     console.log(data);
-    const file = await appwriteService.uploadFile(data.featuredImage[0]);
+    const file = await appwriteService.uploadFile(data.featureimage[0]);
     try {
       if (file) {
         const fileId = file.$id;
-        data.featuredImage = fileId;
+        data.featureimage = fileId;
         console.log('User data ID: ', userData.$id);
         const dbPost = await appwriteService.createPost({
           ...data,

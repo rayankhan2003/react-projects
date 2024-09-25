@@ -15,9 +15,9 @@ export class Service {
     this.bucket = new Storage(this.client);
   }
 
-  async createPost({ title, slug, content, featuredImage, status, userId }) {
+  async createPost({ title, slug, content, featureimage, status, userId }) {
     try {
-      console.log('featuredImage', featuredImage);
+      console.log('featuredImage', featureimage);
       console.log('appwriteDatabaseId ', conf.appwriteDatabaseId);
       const createdPost = await this.databases.createDocument(
         conf.appwriteDatabaseId,
@@ -26,7 +26,7 @@ export class Service {
         {
           title,
           content,
-          featureimage: featuredImage,
+          featureimage: featureimage,
           status,
           userid: userId,
         }
@@ -43,7 +43,7 @@ export class Service {
       // console.log('userId: ', userId);
       const createdPost = await this.databases.createDocument(
         conf.appwriteDatabaseId,
-        conf.appwriteFeedbackCollectionId,
+        conf.appwriteCollectionId,
         ID.unique(),
         {
           firstName,
@@ -60,7 +60,7 @@ export class Service {
     }
   }
 
-  async updatePost(slug, { title, content, featuredImage, status }) {
+  async updatePost(slug, { title, content, featureimage, status }) {
     try {
       const updatedPost = await this.databases.updateDocument(
         conf.appwriteDatabaseId,
@@ -69,7 +69,7 @@ export class Service {
         {
           title,
           content,
-          featuredImage,
+          featureimage,
           status,
         }
       );
