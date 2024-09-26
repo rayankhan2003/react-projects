@@ -12,7 +12,7 @@ function PostForm() {
         title: '',
         slug: '',
         content: '',
-        featuredImage: [],
+        featureimage: [],
         status: 'active',
       },
     });
@@ -21,35 +21,49 @@ function PostForm() {
   const userData = useSelector((state) => state.auth.userData);
 
   const submit = async (data) => {
-    console.log(data);
+    console.log('Form data:', data);
+    console.log('User data:', userData); // Log userData to debug if it's populated correctly
+
+    // Check if userData and userData.$id exist before proceeding
+    if (!userData || !userData.$id) {
+      console.error('Error: User data or user ID is missing');
+      return;
+    }
+
     const file = await appwriteService.uploadFile(data.featureimage[0]);
     try {
       if (file) {
         const fileId = file.$id;
         data.featureimage = fileId;
-        console.log('User data ID: ', userData.$id);
+
+        console.log('File uploaded successfully:', fileId);
+
         const dbPost = await appwriteService.createPost({
           ...data,
-          userId: userData.$id,
+          userId: userData.$id, // Ensure userData.$id is available
         });
+
         if (dbPost) {
+          console.log('Post created successfully:', dbPost);
           navigate(`/post/${dbPost.$id}`);
         }
       }
     } catch (error) {
-      console.log(error);
-      await appwriteService.deleteFile(file.$id);
+      console.error('Error during post creation:', error);
+      if (file && file.$id) {
+        await appwriteService.deleteFile(file.$id); // Clean up file in case of error
+      }
     }
   };
 
   const slugTransform = useCallback((value) => {
-    if (value && typeof value === 'string')
+    if (value && typeof value === 'string') {
       return value
         .trim()
         .toLowerCase()
         .replace(/[^a-zA-Z\d\s]+/g, '-')
         .replace(/\s/g, '-');
-
+    }
     return '';
   }, []);
 
@@ -99,7 +113,7 @@ function PostForm() {
           type="file"
           className="mb-4 w-full mt-2"
           accept="image/png, image/jpg, image/jpeg, image/gif"
-          {...register('featuredImage', { required: true })}
+          {...register('featureimage', { required: true })}
         />
         <Select
           options={['active', 'inactive']}

@@ -1,23 +1,27 @@
-import React, { useEffect } from 'react';
-import appwriteService from '../appwrite/config';
+/* eslint-disable react/prop-types */
+import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import appwriteService from '../appwrite/config';
 
 function PostCard({ $id, title, featureimage }) {
   useEffect(() => {
     console.log('PostCard:', { $id, title, featureimage });
   }, [$id, title, featureimage]);
 
+  const imagePreviewUrl = featureimage
+    ? appwriteService.getFilePreview(featureimage)
+    : null;
+
   return (
     <Link to={`/post/${$id}`}>
       <div className="w-full bg-gray-100 rounded-xl p-4">
         <div className="w-full justify-center mb-4">
-          {featureimage ? (
+          {imagePreviewUrl ? (
             <img
-              src={appwriteService.getFilePreview(featureimage)}
+              src={imagePreviewUrl}
               alt={title}
               className="rounded-xl"
               onError={(e) => {
-                e.target.onerror = null; // Prevent looping if broken image
                 e.target.src = '/path/to/default/image.jpg'; // Fallback image
               }}
             />
