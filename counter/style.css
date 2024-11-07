@@ -1,0 +1,54 @@
+body {
+  background: linear-gradient(
+    to right,
+    #434343,
+    #000000
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+.container {
+  text-align: center;
+  margin-top: 150px;
+}
+.heading {
+  font-size: 40px;
+  margin: 10px;
+}
+.message {
+  font-size: 36px;
+  margin: 15px 20px;
+  font-weight: 500;
+}
+.heading,
+.message {
+  color: #fff;
+}
+.btn {
+  font-size: 22px;
+  background-color: transparent; /* Sets the background color to transparent */ /* Text color */
+  padding: 10px 20px; /* Padding around the text */
+  cursor: pointer; /* Changes the cursor to a pointer on hover */
+  transition: background-color 0.3s ease;
+  border-radius: 3px;
+}
+
+.btn-inc {
+  margin-left: 15px;
+  border: 2px solid #198754;
+  color: #198754;
+}
+.btn-dec {
+  margin-left: 15px;
+  border: 2px solid #ffc107;
+  color: #ffc107;
+}
+.btn-inc:hover,
+.btn-inc:active {
+  color: #fff;
+  background-color: #198754; /* Sets the background color to transparent */ /* Text color */
+}
+
+.btn-dec:hover,
+.btn-dec:active {
+  color: #000;
+  background-color: #ffc107; /* Sets the background color to transparent */ /* Text color */
+}

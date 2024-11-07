@@ -1,0 +1,28 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  font-weight: 400;
+  font-size: 1rem;
+  background-color: #fff;
+  line-height: 1.5;
+  color: #212529;
+}
+
+.container {
+  border-radius: 50px;
+  background: linear-gradient(145deg, #e0ffff, #bce5e6);
+  margin-top: 10rem;
+  box-shadow: 20px 20px 60px #bce5e6, -20px -20px 60px #f0ffff;
+  max-height: 100vh;
+}
+.text-dark {
+  color: #212529 !important;
+}
+.author {
+  text-align: right;
+  margin: 2rem 2rem 0 0;
+}
+#generate-btn {
+  margin: 2rem 0 2rem 0;
+}
